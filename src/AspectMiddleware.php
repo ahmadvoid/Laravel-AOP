@@ -19,10 +19,9 @@ class AspectMiddleware
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function handle(Request $request, Closure $next): \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+    public function handle(Request $request, Closure $next)
     {
         // Get the controller class and method name from the request object
         $controller = $request->route()->getController();
