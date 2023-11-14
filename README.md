@@ -108,7 +108,7 @@ class Logger implements Aspect
 ```
 ### Aspect implementation
 
-You can also create aspects using custom classes that extend the `Ahmadvoid\SimpleAOP\Aspect` abstract class. This class provides four abstract methods that you need to implement in your aspect class:
+The `Ahmadvoid\SimpleAOP\Aspect` abstract class provides 3 abstract methods that you need to implement in your aspect classes:
 
 - `executeBefore`: This method is executed before the controller method is called. It receives the request, the controller instance, and the method name as parameters.
 
@@ -163,7 +163,7 @@ Then, you can apply the attribute to any controller method that you want to log:
 
 namespace App\Http\Controllers;
 
-use App\Aspects\myAspect;
+use App\Aspects\Logger;
 use Illuminate\Http\Request;
 
 class TestController extends Controller
@@ -191,7 +191,7 @@ We can also apply the aspects on all controller method by applying aspect attrib
 
 namespace App\Http\Controllers;
 
-use App\Aspects\myAspect;
+use App\Aspects\Logger;
 use Illuminate\Http\Request;
 
 #[Logger]
