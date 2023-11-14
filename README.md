@@ -27,6 +27,7 @@ After installing the package, you need to register the `AspectServiceProvider` i
     // ...
     AhmadVoid\SimpleAOP\AspectServiceProvider::class,
 ];
+```
 
 You also need to passing your routes through `aspect` alias middleware in your `app/provider/RouteServiceProvider.php` file:
 
