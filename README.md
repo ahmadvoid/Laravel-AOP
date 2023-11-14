@@ -108,7 +108,7 @@ class Logger implements Aspect
 ```
 ### Aspect implementation
 
-The `Ahmadvoid\SimpleAOP\Aspect` abstract class provides 3 abstract methods that you need to implement in your aspect classes:
+The `AhmadVoid\SimpleAOP\Aspect` abstract class provides 3 abstract methods that you need to implement in your aspect classes:
 
 - `executeBefore`: This method is executed before the controller method is called. It receives the request, the controller instance, and the method name as parameters.
 
