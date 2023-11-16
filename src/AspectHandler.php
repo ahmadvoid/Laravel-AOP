@@ -34,6 +34,7 @@ class AspectHandler
      * @param Closure $next
      * @return mixed
      * @throws \ReflectionException
+     * @throws \Exception
      */
     public function executeAspects(Request $request, mixed $controller, string $method, Closure $next): mixed
     {
@@ -43,28 +44,33 @@ class AspectHandler
         // Add the attributes to the list of aspects
         $this->addAspects($attributes);
 
-        // For each aspect in the list
-        foreach ($this->aspects as $aspect) {
-            // Execute the before method
-            $aspect->executeBefore($request, $controller, $method);
-        }
+        try {
+            // For each aspect in the list
+            foreach ($this->aspects as $aspect) {
+                // Execute the before method
+                $aspect->executeBefore($request, $controller, $method);
+            }
 
-        // Try to proceed with the request and get the response
-        $response = $next($request);
-        $exception = $response->exception;
+            // Try to proceed with the request and get the response
+            $response = $next($request);
+            $exception = $response->exception;
 
-        // If an exception is thrown, execute the exception method for each aspect
-        if ($exception) {
+            // If an exception is thrown, execute the exception method for each aspect
+            if ($exception)
+                throw $exception;
+
+
+            // Execute the after method for each aspect in reverse order
+            foreach (array_reverse($this->aspects) as $aspect) {
+                $aspect->executeAfter($request, $controller, $method, $response);
+            }
+
+        } catch (\Exception $exception) {
             foreach ($this->aspects as $aspect) {
                 $aspect->executeException($request, $controller, $method, $exception);
             }
             // Rethrow the exception
             throw $exception;
-        }
-
-        // Execute the after method for each aspect in reverse order
-        foreach (array_reverse($this->aspects) as $aspect) {
-            $aspect->executeAfter($request, $controller, $method, $response);
         }
 
         // Return the response
