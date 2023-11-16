@@ -35,7 +35,7 @@ class AspectHandler
      * @return mixed
      * @throws \ReflectionException
      */
-    public function executeAspects(Request $request, mixed $controller,string $method, Closure $next): mixed
+    public function executeAspects(Request $request, mixed $controller, string $method, Closure $next): mixed
     {
         // Read the attributes from the controller method using the AttributeHandler instance
         $attributes = $this->attributeHandler->readAttributes($controller, $method);
@@ -50,15 +50,16 @@ class AspectHandler
         }
 
         // Try to proceed with the request and get the response
-        try {
-            $response = $next($request);
-        } catch (\Exception $e) {
-            // If an exception is thrown, execute the exception method for each aspect
+        $response = $next($request);
+        $exception = $response->exception;
+
+        // If an exception is thrown, execute the exception method for each aspect
+        if ($exception) {
             foreach ($this->aspects as $aspect) {
-                $aspect->executeException($request, $controller, $method, $e);
+                $aspect->executeException($request, $controller, $method, $exception);
             }
             // Rethrow the exception
-            throw $e;
+            throw $exception;
         }
 
         // Execute the after method for each aspect in reverse order

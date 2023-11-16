@@ -8,6 +8,9 @@ use ReflectionClass;
 class AttributeHandler
 {
     // Implement the method for reading the attributes from the controller method
+    /**
+     * @throws \ReflectionException
+     */
     public function readAttributes($controller, $method): array
     {
         $cachingEnable = config('aop.attribute_handler.enable', false);
@@ -43,8 +46,16 @@ class AttributeHandler
         $attributes = collect($reflection->getAttributes())->merge($reflectionMethod->getAttributes());
 
         // Get the attribute instances
-        return $attributes->map(function ($attribute) {
+        $attributes = $attributes->map(function ($attribute) {
             return $attribute->newInstance();
-        })->toArray();
+        });
+
+        // Filter the attribute instances by the 'Aspect' interface
+        $attributes = $attributes->filter(function ($attribute) {
+            return $attribute instanceof Aspect;
+        });
+
+        // Return the filtered attributes as an array
+        return $attributes->toArray();
     }
 }
